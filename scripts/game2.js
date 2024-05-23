@@ -1,73 +1,53 @@
-let randomNumber = Math.floor(Math.random() * 100) + 1;
+let userChoice; 
+let computerChoice
 
-const guesses = document.querySelector('.guesses');
-const lastResult = document.querySelector('.lastResult');
-const lowOrHi = document.querySelector('.lowOrHi');
+const rpsVariables = ["rock", "paper", "scissors"];
 
-const guessSubmit = document.querySelector('.guessSubmit');
-const guessField = document.querySelector('.guessField');
+// getting user selection from rock paper scissors elements
+document.getElementById("rock").addEventListener('click', userSelectedRock)
+document.getElementById("paper").addEventListener('click', userSelectedPaper)
+document.getElementById("scissors").addEventListener('click', userSelectedScissors)
 
-let guessCount = 1;
-let resetButton;
+// creates random selection from rock paper or scissors for the computer generated oppopnent
+function computerRoll() {
+  computerChoice = rpsVariables[Math.floor(Math.random() * 3)]; // Selects a computer choice from the rps Array 
 
-function checkGuess() {
-    let userGuess = Number(guessField.value);
-    if (guessCount === 1) {
-      guesses.textContent = 'Previous guesses: ';
-    }
-    guesses.textContent += userGuess + ' ';
-   
-    if (userGuess === randomNumber) {
-      lastResult.textContent = 'Congratulations! You got it right!';
-      lastResult.style.backgroundColor = 'green';
-      lowOrHi.textContent = '';
-      setGameOver();
-    } else if (guessCount === 10) {
-      lastResult.textContent = '!!!GAME OVER!!!';
-      setGameOver();
-    } else {
-      lastResult.textContent = 'Wrong!';
-      lastResult.style.backgroundColor = 'red';
-      if(userGuess < randomNumber) {
-        lowOrHi.textContent = 'Last guess was too low!';
-      } else if(userGuess > randomNumber) {
-        lowOrHi.textContent = 'Last guess was too high!';
-      }
-    }
-   
-    guessCount++;
-    guessField.value = '';
-    guessField.focus();
+  document.getElementById("compPick").innerHTML = "Computer selected " + computerChoice;
+  compareChoice(userChoice, computerChoice);
 }
 
-guessSubmit.addEventListener('click', checkGuess);
-
-function setGameOver() {
-  guessField.disabled = true;
-  guessSubmit.disabled = true;
-  const container = document.getElementById('resetButtonContainer');
-  resetButton = document.createElement('button');
-  resetButton.textContent = 'Start new game';
-  container.appendChild(resetButton);
-  resetButton.addEventListener('click', resetGame);
+//compare user's selection with the computer's to determine result
+function compareChoice(userChoice, computerChase) {
+    if (userChoice === computerChoice) {
+      document.getElementById("overallResult").innerHTML = "Its a Tie!"; 
+    } else if (userChoice === "rock" && computerChoice == "scissors") {
+          document.getElementById("overallResult").innerHTML = "Rock Beats Scissors - You Win!"; 
+    } else if (userChoice === "rock" && computerChoice == "paper") {
+          document.getElementById("overallResult").innerHTML = "Paper Beats Rock - You Lose!"; 
+    } else if (userChoice === "paper" && computerChoice == "rock") {
+          document.getElementById("overallResult").innerHTML = "Paper Beats Rock - You Win!"; 
+    } else if (userChoice === "scissors" && computerChoice == "paper") {
+          document.getElementById("overallResult").innerHTML = "Scissors Beats Paper - You Win!"; 
+    } else if (userChoice === "rock" && computerChoice == "scissors") {
+          document.getElementById("overallResult").innerHTML = "Rock Beats Scissors - You Lose!"; 
+    }  
 }
 
-function resetGame() {
-  guessCount = 1;
-
-  const resetParas = document.querySelectorAll('.resultParas p');
-  for (let i = 0 ; i < resetParas.length ; i++) {
-    resetParas[i].textContent = '';
-  }
-
-  resetButton.parentNode.removeChild(resetButton);
-
-  guessField.disabled = false;
-  guessSubmit.disabled = false;
-  guessField.value = '';
-  
-  lastResult.style.backgroundColor = 'white';
-
-  randomNumber = Math.floor(Math.random() * 100) + 1;
+// functions called to update pick, sets userChoice and computer Roll
+function userSelectedRock() {
+  document.getElementById("userPick").innerHTML = "You selected rock";
+  userChoice = "rock";
+  computerRoll();
 }
 
+function userSelectedPaper() {
+  document.getElementById("userPick").innerHTML = "You selected paper";
+  userChoice = "paper";
+  computerRoll();
+}
+
+function userSelectedScissors() {
+  document.getElementById("userPick").innerHTML = "You selected scissors";
+  userChoice = "scissors";
+  computerRoll();
+}
